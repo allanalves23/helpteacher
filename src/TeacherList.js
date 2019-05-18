@@ -1,12 +1,19 @@
 import React, {Component} from 'react'
-import {View, ScrollView, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native'
+import {View, ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Button} from 'react-native'
 import Teacher from './components/TeacherItem'
 import Header from './components/Header'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import axios from 'axios'
+import {backendUrl} from '../backend'
 
 export default class TeacherList extends Component {
     constructor(props){
         super(props)
+        this.state = {
+            loading: true,
+            teachers: [],
+            error: false
+        }
     }
 
     static navigationOptions = {
@@ -14,32 +21,70 @@ export default class TeacherList extends Component {
         drawerIcon: ({tintColor}) => (<Icon name="graduation-cap" size={18} color={tintColor}></Icon>)
     }
 
+    async componentDidMount(){
+        await this.getTeachers()
+        
+
+    }
+    
+    async getTeachers(){
+        const url = `${backendUrl}/mobile/teachers`
+        await axios(url).then(res => {
+            const teachers = res.data.teachers
+            this.setState({
+                teachers,
+                error: false
+            })
+        }).catch( () =>{
+            this.setState({
+                error: true
+            })
+        })
+
+        this.loadingInfo(this.state)
+    }
+
+    loadingInfo = (prev) => {
+        const previous = !prev.loading
+        this.setState({
+            loading: previous
+        })
+    }
+    
     render(){
         return(
-            <View>
+            <View style={{flex: 1}}>
                 <Header></Header>
-                <View style={styles.buttonBar}>
-                    <TouchableOpacity>
-                        <Text style={styles.buttonText}>Matéria</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={styles.buttonText}>Preço</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={styles.buttonText}>Professor</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{margin: 15, marginBottom: 50, flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                    <Icon name="search" color="#CCC" size={18}></Icon>
-                    <TextInput style={styles.searchInput} placeholder="Pesquisar..."></TextInput>
+                <View>
+                    <View style={styles.buttonBar}>
+                        <TouchableOpacity onPress={() =>{
+                            //programação ação
+                        }}>
+                            <Text style={styles.buttonText}>Matéria</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() =>{
+                            //programação ação
+                        }}>
+                            <Text style={styles.buttonText}>Preço</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() =>{
+                            //programação ação
+                        }}>
+                            <Text style={styles.buttonText}>Professor</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ padding: 15, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                        <Icon name="search" color="#CCC" size={18}></Icon>
+                        <TextInput style={styles.searchInput} placeholder="Pesquisar..." onChangeText={(value) => {
+                            //programar pesquisa por digitação
+                        } }></TextInput>
+                    </View>
                 </View>
                 <ScrollView contentContainerStyle={styles.list}>
-                    <Teacher></Teacher>
-                    <Teacher></Teacher>
-                    <Teacher></Teacher>
-                    <Teacher></Teacher>
-                    <Teacher></Teacher>
-                    <Teacher></Teacher>
+                        { this.state.teachers.length > 0 && !this.state.loading && <FlatList style={{marginTop: 15, marginBottom: 15}} data={this.state.teachers} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => <Teacher teacher={item} ></Teacher>} />}
+                        { this.state.teachers.length === 0 && this.state.loading && <ActivityIndicator size="large" color="#B42727"></ActivityIndicator>}
+                        { this.state.teachers.length === 0 && !this.state.loading && <Text style={{fontSize: 18}}>Nenhum resultado encontrado</Text>}
+                        { this.state.error  && <Text style={{fontSize: 18}}>Ocorreu um erro ao buscar os dados, tente novamente mais tarde.</Text>}
                 </ScrollView>
             </View>
         )
@@ -48,9 +93,14 @@ export default class TeacherList extends Component {
 
 const styles = StyleSheet.create({
     buttonBar: {
-        padding: 40,
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 40,
+        paddingRight: 40,
         justifyContent: 'space-between',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        borderBottomColor: '#CCC',
+        borderBottomWidth: 0.9
     },
     buttonText: {
         color: '#31A7F9',
@@ -59,9 +109,9 @@ const styles = StyleSheet.create({
         borderBottomColor: '#31A7F9'
     },
     list: {
-        margin: 10,
+        flex: 1,
         alignItems: 'center',
-        paddingVertical: 20
+        justifyContent: 'center'
     },
     searchInput: {
         borderBottomWidth: 0.6,
