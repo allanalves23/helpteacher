@@ -5,6 +5,7 @@ import axios from 'axios'
 import {backendUrl} from '../backend'
 import { Dropdown } from 'react-native-material-dropdown'
 import {Header, Left, Button, Icon, Body, Title} from 'native-base'
+import System from '../config/system'
 
 
 export default class TeacherList extends Component {
@@ -22,9 +23,8 @@ export default class TeacherList extends Component {
     }
 
     static navigationOptions = {
-        title: 'TITULO DE TESTE',
         drawerLabel: 'PROFESSORES',
-        drawerIcon: ({tintColor}) => (<Icon type="FontAwesome5" name="graduation-cap" size={18} color={tintColor}></Icon>)
+        drawerIcon: ({tintColor}) => (<Icon type="FontAwesome5" name="book" size={18} color={tintColor}></Icon>)
     }
 
     async componentDidMount(){
@@ -36,7 +36,12 @@ export default class TeacherList extends Component {
     async getTeachers(query, prefer, sequence, newPage){
         let page = 1
         if(newPage) page = newPage
-        else page = this.state.page
+        else {
+            page = this.state.page
+            this.setState({
+                teachers: []
+            })
+        }
         sequence = sequence || ''
         prefer = prefer || ''
         query = query || ''
@@ -84,7 +89,7 @@ export default class TeacherList extends Component {
     renderFooter = () => {
         if(!this.state.loading) return null
         return (
-            <View style={{padding: 25}}><ActivityIndicator size="large" color="#B42727"></ActivityIndicator></View>
+            <View><ActivityIndicator size="large" color={System.colorApp}></ActivityIndicator></View>
         )
     }
 
@@ -93,16 +98,16 @@ export default class TeacherList extends Component {
         return(
             <View style={{flex: 1}}>
                 <View>
-                    <Header style={{backgroundColor: '#B42727'}}>
+                    <Header style={{backgroundColor: System.colorApp}}>
                         <Left>
-                            <Button style={{backgroundColor: '#B42727'}} onPress={() => {
+                            <Button style={{backgroundColor: System.colorApp}} onPress={() => {
                                 this.props.navigation.openDrawer()
                             }}>
                                 <Icon name="menu"></Icon>
                             </Button>
                         </Left>
                         <Body>
-                            <Title style={{justifyContent: 'center',alignItems: 'center'}}><Icon style={{marginRight: 10}} type="FontAwesome5" name="graduation-cap"></Icon><Text>HELP TEACHER</Text></Title>
+                            <Title style={{justifyContent: 'center',alignItems: 'center'}}><Icon style={{marginRight: 10}} type="FontAwesome5" name="graduation-cap"></Icon><Text>{System.nameUpperCase}</Text></Title>
                         </Body>
                     </Header>
                 </View>
@@ -186,9 +191,9 @@ export default class TeacherList extends Component {
                             const query = this.state.query
                     
                             this.getTeachers(query, prefer, sequence, newPage)
-                        }} onEndReachedThreshold={0.2} ListFooterComponent={this.renderFooter} style={{marginTop: 15, marginBottom: 15}} data={this.state.teachers} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => <Teacher teacher={item} ></Teacher>} />}
+                        }} onEndReachedThreshold={0.1} ListFooterComponent={this.renderFooter} style={{marginTop: 15, marginBottom: 15}} data={this.state.teachers} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => <TouchableOpacity onPress={() => this.props.navigation.navigate('Portfolio', {id: item.idTeacher})}><Teacher teacher={item} ></Teacher></TouchableOpacity>} />}
                         { this.state.teachers.length === 0 && !this.state.loading && <Text style={{fontSize: 18}}>Nenhum resultado encontrado</Text>}
-                        { this.state.teachers.length === 0 && this.state.loading && <ActivityIndicator size="large" color="#B42727"></ActivityIndicator>}
+                        { this.state.teachers.length === 0 && this.state.loading && <View style={{justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator size="large" color="#B42727"></ActivityIndicator><Text style={{marginTop: 8}}>Carregando professores ...</Text></View>}
                         { this.state.error && <Text style={{fontSize: 18, textAlign:'center'}}>Ocorreu um erro ao buscar os dados, tente novamente mais tarde.</Text>}
                 </ScrollView>
             </View>
@@ -216,7 +221,8 @@ const styles = StyleSheet.create({
     list: {
         flex: 3,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        paddingBottom: 20
     },
     searchInput: {
         borderBottomWidth: 0.6,

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, StyleSheet} from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 export default class TeacherItem extends Component {
@@ -9,7 +9,7 @@ export default class TeacherItem extends Component {
 
     render(){
         return(
-            <View style={styles.box}>
+            <View style={styles.box} onPress={() => null}>
                 <View style={styles.boxTitle}>
                     <Text style={{fontWeight: 'bold'}}>{this.props.teacher.name}</Text>
                 </View>
@@ -30,7 +30,6 @@ export default class TeacherItem extends Component {
                         </View>
                     </View>
                 </View>
-                
             </View>
         )
     }
