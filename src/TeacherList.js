@@ -1,24 +1,30 @@
 import React, {Component} from 'react'
-import {View, ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, Button} from 'react-native'
+import {View, ScrollView, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator} from 'react-native'
 import Teacher from './components/TeacherItem'
-import Header from './components/Header'
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import axios from 'axios'
 import {backendUrl} from '../backend'
+import { Dropdown } from 'react-native-material-dropdown'
+import {Header, Left, Button, Icon, Body, Title} from 'native-base'
+
 
 export default class TeacherList extends Component {
     constructor(props){
         super(props)
         this.state = {
-            loading: true,
+            loading: false,
             teachers: [],
-            error: false
+            error: false,
+            page: 1,
+            prefer: '',
+            sequence: '',
+            query: '',
         }
     }
 
     static navigationOptions = {
+        title: 'TITULO DE TESTE',
         drawerLabel: 'PROFESSORES',
-        drawerIcon: ({tintColor}) => (<Icon name="graduation-cap" size={18} color={tintColor}></Icon>)
+        drawerIcon: ({tintColor}) => (<Icon type="FontAwesome5" name="graduation-cap" size={18} color={tintColor}></Icon>)
     }
 
     async componentDidMount(){
@@ -27,21 +33,45 @@ export default class TeacherList extends Component {
 
     }
     
-    async getTeachers(){
-        const url = `${backendUrl}/mobile/teachers`
+    async getTeachers(query, prefer, sequence, newPage){
+        let page = 1
+        if(newPage) page = newPage
+        else page = this.state.page
+        sequence = sequence || ''
+        prefer = prefer || ''
+        query = query || ''
+
+        this.loadingInfo(this.state)
+        const url = `${backendUrl}/mobile/teachers?query=${query}&sequence=${sequence}&prefer=${prefer}&page=${page}`
         await axios(url).then(res => {
-            const teachers = res.data.teachers
+            const teachers = this.formatCost(res.data.teachers)
             this.setState({
                 teachers,
-                error: false
+                error: false,
+                query
             })
         }).catch( () =>{
             this.setState({
-                error: true
+                error: true,
+                query
             })
         })
 
         this.loadingInfo(this.state)
+    }
+
+    formatCost(teachers){
+        teachers = teachers.map((teacher) => {
+            teacher.costHour = parseFloat(teacher.costHour).toFixed(2).replace('.',',')
+            return teacher
+        })
+        return teachers
+    }
+
+    resetPage(){
+        this.setState({
+            page: 1
+        })
     }
 
     loadingInfo = (prev) => {
@@ -51,40 +81,115 @@ export default class TeacherList extends Component {
         })
     }
     
+    renderFooter = () => {
+        if(!this.state.loading) return null
+        return (
+            <View style={{padding: 25}}><ActivityIndicator size="large" color="#B42727"></ActivityIndicator></View>
+        )
+    }
+
+    
     render(){
         return(
             <View style={{flex: 1}}>
-                <Header></Header>
+                <View>
+                    <Header style={{backgroundColor: '#B42727'}}>
+                        <Left>
+                            <Button style={{backgroundColor: '#B42727'}} onPress={() => {
+                                this.props.navigation.openDrawer()
+                            }}>
+                                <Icon name="menu"></Icon>
+                            </Button>
+                        </Left>
+                        <Body>
+                            <Title style={{justifyContent: 'center',alignItems: 'center'}}><Icon style={{marginRight: 10}} type="FontAwesome5" name="graduation-cap"></Icon><Text>HELP TEACHER</Text></Title>
+                        </Body>
+                    </Header>
+                </View>
                 <View>
                     <View style={styles.buttonBar}>
                         <TouchableOpacity onPress={() =>{
-                            //programação ação
+                            setTimeout(async ()=> {
+                                await this.resetPage()
+                                const prefer = 2
+                                const sequence = this.state.sequence
+                                const query = this.state.query
+                                this.getTeachers(query, prefer, sequence)
+                            }, 1000)
                         }}>
                             <Text style={styles.buttonText}>Matéria</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() =>{
-                            //programação ação
+                            setTimeout(async ()=> {
+                                await this.resetPage()
+                                const prefer = 1
+                                const sequence = this.state.sequence
+                                const query = this.state.query
+                                this.getTeachers(query, prefer, sequence)
+                            }, 1000)
                         }}>
                             <Text style={styles.buttonText}>Preço</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() =>{
-                            //programação ação
+                            setTimeout(async ()=> {
+                                await this.resetPage()
+                                const prefer = 3
+                                const sequence = this.state.sequence
+                                const query = this.state.query
+                                this.getTeachers(query, prefer, sequence)
+                            }, 1000)
                         }}>
                             <Text style={styles.buttonText}>Professor</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ padding: 15, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                        <Icon name="search" color="#CCC" size={18}></Icon>
-                        <TextInput style={styles.searchInput} placeholder="Pesquisar..." onChangeText={(value) => {
-                            //programar pesquisa por digitação
-                        } }></TextInput>
+                    <View style={{paddingLeft: 20, paddingRight: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                            <Icon name="search" color="#CCC" size={18}></Icon>
+                            <TextInput style={styles.searchInput} placeholder="Pesquisar..." onSubmitEditing={async (event) => {
+                                const query = event.nativeEvent.text
+                                await this.resetPage()
+                                const prefer = this.state.prefer
+                                const sequence = this.state.sequence
+                                this.getTeachers(query, prefer, sequence)
+                            } }></TextInput>
+                        </View>
+                        <View style={{width: 65}}>
+                            <Dropdown style={{marginLeft: 10}}
+                                label='Ordem'
+                                data={[{value: 'A-Z'}, {value: 'Z-A'}]} onChangeText={async (value) => {
+                                    let sequence = ''
+                                    if(value === 'A-Z'){
+                                        //asc
+                                        sequence = 1
+                                    }else{
+                                        //desc
+                                        sequence = ''
+                                    }
+
+                                    await this.resetPage()
+                                    const prefer = this.state.prefer
+                                    const query = this.state.query
+                                    this.getTeachers(query, prefer, sequence)
+
+                                }}
+                            />
+                        </View>
                     </View>
                 </View>
                 <ScrollView contentContainerStyle={styles.list}>
-                        { this.state.teachers.length > 0 && !this.state.loading && <FlatList style={{marginTop: 15, marginBottom: 15}} data={this.state.teachers} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => <Teacher teacher={item} ></Teacher>} />}
-                        { this.state.teachers.length === 0 && this.state.loading && <ActivityIndicator size="large" color="#B42727"></ActivityIndicator>}
+                        { this.state.teachers.length > 0 && <FlatList onEndReached={ () => {
+                            if(this.state.teachers.length <= 2) return
+                            const newPage = this.state.page++
+
+                            const sequence = this.state.sequence
+                            const prefer = this.state.prefer
+                            const query = this.state.query
+                    
+                            this.getTeachers(query, prefer, sequence, newPage)
+                        }} onEndReachedThreshold={0.2} ListFooterComponent={this.renderFooter} style={{marginTop: 15, marginBottom: 15}} data={this.state.teachers} keyExtractor={(item, index) => index.toString()} renderItem={({item}) => <Teacher teacher={item} ></Teacher>} />}
                         { this.state.teachers.length === 0 && !this.state.loading && <Text style={{fontSize: 18}}>Nenhum resultado encontrado</Text>}
-                        { this.state.error  && <Text style={{fontSize: 18}}>Ocorreu um erro ao buscar os dados, tente novamente mais tarde.</Text>}
+                        { this.state.teachers.length === 0 && this.state.loading && <ActivityIndicator size="large" color="#B42727"></ActivityIndicator>}
+                        { this.state.error && <Text style={{fontSize: 18, textAlign:'center'}}>Ocorreu um erro ao buscar os dados, tente novamente mais tarde.</Text>}
                 </ScrollView>
             </View>
         )
@@ -109,15 +214,15 @@ const styles = StyleSheet.create({
         borderBottomColor: '#31A7F9'
     },
     list: {
-        flex: 1,
+        flex: 3,
         alignItems: 'center',
         justifyContent: 'center'
     },
     searchInput: {
         borderBottomWidth: 0.6,
-        width: 300,
+        width: 275,
         height: 45,
-        marginLeft: 5,
+        marginRight: 10,
         fontSize: 18,
     },
     

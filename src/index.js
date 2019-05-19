@@ -1,15 +1,36 @@
 import TeacherList from './TeacherList'
-import Discipline from './Discipline'
 import Profile from './Profile'
+import Login from './Login'
 
-import {createAppContainer, createDrawerNavigator,} from 'react-navigation'
+import React, {Component} from 'react'
+import {SafeAreaView, ScrollView} from 'react-native'
 
-const Routes = createAppContainer(
-    createDrawerNavigator({
-        TeacherList: TeacherList,
-        Materia: Discipline,
-        Profile: Profile
-    })
+import {createDrawerNavigator, DrawerItems, createAppContainer} from 'react-navigation'
+
+export default class HelpTeacherApp extends Component {
+    render(){
+        return (
+            <AppContainer/>
+        )
+    }
+}
+
+const Navigator = createDrawerNavigator({
+    TeacherList: TeacherList,
+    Profile: Profile,
+}
+// ,
+// {
+//     contentComponent: (props) => {
+//         <ScrollView>
+//             <SafeAreaView style={{flex: 1}}>
+//                     <DrawerItems {...props} />
+//             </SafeAreaView>
+//         </ScrollView>
+//     }
+// }
 )
 
-export default Routes
+const AppContainer = createAppContainer(Navigator) 
+
+//export default AppContainer

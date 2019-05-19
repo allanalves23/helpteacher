@@ -16,13 +16,13 @@ export default class TeacherItem extends Component {
                 <View style={{justifyContent: 'center'}}>
                     <View style={styles.boxContent}>
                         <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
-                            <Text style={{fontSize: 18}}>{this.props.teacher.description}</Text>
+                            <Text style={{fontSize: 18}}>{this.props.teacher.disciplineDesc}</Text>
                         </View>
                     </View>
                     <View style={styles.boxFooter}>
                         <View style={{flexDirection: 'row', alignItems:'center'}}>
                             <Icon name="map-marker-alt" size={18} color="#000"></Icon>
-                            <Text style={{fontSize: 16, marginLeft: 5}}>{`${this.props.teacher.state} - ${this.props.teacher.neighborhood}`}</Text>
+                            <Text style={{fontSize: 15, marginLeft: 5}}>{`${this.props.teacher.state} - ${this.props.teacher.neighborhood}`}</Text>
                         </View>
                         <View style={{justifyContent: "flex-end", alignItems: "flex-end"}}>
                             <Text style={{fontSize: 18}}>{`R$ ${this.props.teacher.costHour}`}</Text>

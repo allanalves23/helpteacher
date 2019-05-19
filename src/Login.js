@@ -7,6 +7,11 @@ export default class TeacherList extends Component {
         super(props)
     }
 
+    static navigationOptions = {
+        drawerLockMode: 'locked-closed',
+        
+    }
+
     render(){
         return(
             <View style={styles.container}>
