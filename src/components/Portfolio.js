@@ -37,6 +37,7 @@ export default class Portfolio extends Component{
                 error: true
             })
         })
+        alert(this.state.graduations.length)
         this.loadingInfo(this.state)
     }
 
@@ -88,20 +89,28 @@ export default class Portfolio extends Component{
                                 <Text style={{marginBottom: 8, fontSize: 16, color: '#000'}}>Bairro de atuação:  {this.state.teacher.neighborhood || ''}</Text>
                             </View>
                         </View>
-                        <View style={{flexDirection: 'row', margin: 5 ,justifyContent: 'flex-start', alignItems: 'center', marginLeft: 10,  borderBottomColor: '#CCC', borderBottomWidth: 0.8, width: 225}}>
+                        <View style={styles.topic}>
+                            <Icon name="star" size={18} style={{marginRight: 5}}></Icon> 
+                            <Text style={{fontSize: 18}}>Formação</Text>
+                        </View>
+                        <View style={styles.block}>
+                            {this.state.graduations.length > 0 && <FlatList style={{padding: 0, margin: 0}} data={this.state.graduations} keyExtractor={(item) => item.id.toString()} renderItem={({item}) => <Text style={{marginBottom: 2, fontSize: 15, color: '#000'}}> {item.description}</Text> }></FlatList>}
+                            {this.state.graduations.length === 0 && <Text style={{fontSize: 16, color: '#000', textAlign: 'center'}}>NENHUMA FORMAÇÃO ENCONTRADA</Text>}
+                        </View>
+                        <View style={styles.topic}>
                             <Icon name="information-circle" size={18} style={{marginRight: 5}}></Icon> 
                             <Text style={{fontSize: 18}}>Informações</Text>
                         </View>
-                        <View style={{padding: 15}}>
+                        <View style={styles.block}>
                             <Text style={{marginBottom: 8, fontSize: 16, color: '#000'}}>Telefone: {this.state.teacher.telphone || ''}</Text>
                             <Text style={{marginBottom: 8, fontSize: 16, color: '#000'}}>E-mail: {this.state.teacher.email || ''}</Text>
                             <Text style={{marginBottom: 8, fontSize: 16, color: '#000'}}>Data de nascimento: {this.computeBirthDate(this.state.teacher.birthDate)}</Text>
                         </View>
-                        <View style={{flexDirection: 'row', margin: 5 ,justifyContent: 'flex-start', alignItems: 'center', marginLeft: 10,  borderBottomColor: '#CCC', borderBottomWidth: 0.8, width: 225}}>
+                        <View style={styles.topic}>
                             <Icon name="school" size={18} style={{marginRight: 5}}></Icon> 
                             <Text style={{fontSize: 18}}>Disciplinas aplicáveis</Text>
                         </View>
-                        <View style={{padding: 15}}>
+                        <View style={styles.block}>
                             {this.state.disciplines.length > 0 &&<FlatList data={this.state.disciplines} keyExtractor={(item) => item.idDiscipline.toString()} renderItem={({item}) => <Text style={{marginBottom: 8, fontSize: 16, color: '#000'}}> {item.discipline} - {item.acting_area}</Text> }></FlatList>}
                             {this.state.disciplines.length === 0 && <Text style={{fontSize: 16, color: '#000'}}>NENHUMA DISCIPLINA ENCONTRADA</Text>}
                         </View>
@@ -124,5 +133,19 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         padding: 7
+    },
+    topic:{
+        flexDirection: 'row',
+        margin: 5 ,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginLeft: 10,
+        borderBottomColor: '#CCC',
+        borderBottomWidth: 0.8,
+        width: 225
+    },
+    block: {
+        flex: 1,
+        padding: 15,
     }
 })
