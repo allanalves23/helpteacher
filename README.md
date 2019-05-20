@@ -1,4 +1,5 @@
- HELP TEACHER
+
+# HELP TEACHER
 
 Atividade prática supervisionada - Desenvolvimento de aplicações móveis
 
@@ -13,15 +14,15 @@ O **Help Teacher** chega para ligar esses dois perfis, facilitando a comunicaç�
 ![Wireframe](https://i.imgur.com/a4lkEis.png)
 
 ### Imagens
-**Listagem de professores**
-![Listagem de professores](https://i.imgur.com/TkABFiJ.png)
 
-**Menu de navegação**
-![Menu](https://i.imgur.com/haTbKWM.png)
+ 
+![ImagensApp](https://i.imgur.com/0S5xbFg.png)
 
-**Visualização de portfólio de professor**
-![Portfolio1](https://i.imgur.com/1B17OMZ.png)
-![Portfolio2](https://i.imgur.com/9UBoD30.png)
+1. **Listagem de professores**
+ 2. **Menu da aplicação**
+ 3. **Portfólio (1)**
+ 4. **Portfólio (2)**
+
 
 ### Plataforma WEB
 Aplicação desenvolvida com NodeJS, utilizada para alimentar determinadas informações que o aplicação não será responsável por realizar.
