@@ -9,7 +9,7 @@ Muitas pessoas possuem dúvidas e dificuldades de aprendizado em determinados as
 
 Porém a falta de oportunidade dificulta essa interação, seja por parte de alunos com condições financeiras inferiores, professores sem oportunidade no mercado ou instrutores a fim de ter oportunidade de transmitir seu conhecimento.
 
-O **Help Teacher** chega para ligar esses dois perfis, facilitando a comunicação e contratação de serviços. De maneira autônoma e empreendedora os professores podem construir sua base de alunos e ao mesmo tempo alunos podem obter novas experiências.*
+O **Help Teacher** chega para ligar esses dois perfis, facilitando a comunicação e contratação de serviços. De maneira autônoma e empreendedora os professores podem construir sua base de alunos e ao mesmo tempo alunos podem obter novas experiências.
 ### Wireframe
 ![Wireframe](https://i.imgur.com/a4lkEis.png)
 
