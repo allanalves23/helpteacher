@@ -47,16 +47,20 @@ O **Help Teacher** chega para ligar esses dois perfis, facilitando a comunicaç�
 
   
 
-6.  **Listagem de professores**
+5.  **Listagem de professores**
 
-7.  **Menu da aplicação**
+6.  **Menu da aplicação**
 
-8.  **Portfólio (1)**
+7.  **Portfólio (1)**
 
-9.  **Portfólio (2)**
+8.  **Portfólio (2)**
 
+  ![ImagemApp(2)](https://i.imgur.com/gYdIntK.png)
   
-  
+9. **Mudança de dados de estudante**
+
+10.  **Mudança de dados de professor**
+
 
 ### Plataforma WEB
 
