@@ -2,18 +2,23 @@ import TeacherList from './TeacherList'
 import Profile from './Profile'
 import Login from './Login'
 import Portfolio from './components/Portfolio'
+import NotRegistered from './NotRegistered'
 
 import React, {Component} from 'react'
 import {SafeAreaView, ScrollView, StyleSheet, View, Text, TouchableOpacity} from 'react-native'
-
+import {Root} from 'native-base'
 import {createDrawerNavigator, createSwitchNavigator, DrawerItems, createAppContainer} from 'react-navigation'
 import {Icon} from 'native-base'
 import System from '../config/system'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default class HelpTeacherApp extends Component {
+    
     render(){
         return (
-            <AppContainer/>
+            <Root>
+                <AppContainer/>
+            </Root>
         )
     }
 }
@@ -28,8 +33,13 @@ const CustomDrawerContentComponent = props => (
             <DrawerItems {...props} />
         </SafeAreaView>
         <View style={styles.footer}>
-            <TouchableOpacity style={styles.button} onPress={() => {
-                alert('logout')
+            <TouchableOpacity style={styles.button} onPress={async () => {
+                try {
+                    await AsyncStorage.removeItem('@user')
+                    props.navigation.navigate('AuthScreen')
+                } catch (error) {
+                    //
+                }
             }}>
                 <Text style={styles.link}>Sair</Text>
             </TouchableOpacity>
@@ -88,7 +98,8 @@ const Navigator = createDrawerNavigator({
 const switchNavigator = createSwitchNavigator({
     AuthScreen: Login,
     AppDrawer: Navigator,
-    Portfolio: Portfolio
+    Portfolio: Portfolio,
+    NotRegistered: NotRegistered
 },{
     initialRouteName: 'AuthScreen'
 })

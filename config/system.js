@@ -1,6 +1,6 @@
 module.exports = {
     colorApp: '#B42727',
-    version: `${0.1}`,
+    version: `${1.0}`,
     name: 'Help Teacher',
     nameUpperCase: 'HELP TEACHER',
     build: '1',

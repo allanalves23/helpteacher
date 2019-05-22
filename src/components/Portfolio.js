@@ -37,7 +37,6 @@ export default class Portfolio extends Component{
                 error: true
             })
         })
-        alert(this.state.graduations.length)
         this.loadingInfo(this.state)
     }
 
